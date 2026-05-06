@@ -554,7 +554,8 @@ const LS = {
 /* ══════════════════════════════════════════════
    STATE
 ══════════════════════════════════════════════ */
-let WEBHOOK = localStorage.getItem(LS.webhook) || "";
+const FIXED_WEBHOOK = "https://default8cb3c63f29564d28b216acb701237c.25.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/f32ca5ac20ea4119bf22e7bdb7785afb/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=PO3orzLOAQjl8FqO71nX0abr1HIiNbyXXk73u9aRA-o";
+let WEBHOOK = localStorage.getItem(LS.webhook) || FIXED_WEBHOOK;
 let OPTIONS = {};
 let currentTab = "equipos";
 
@@ -859,12 +860,12 @@ populateSelects();
 setNow();
 updateDot();
 
-if (WEBHOOK) {
-  document.getElementById("configBanner").style.display = "none";
-  document.getElementById("webhookBar").style.display = "none";
-} else {
-  document.getElementById("webhookBar").style.display = "block";
-}
+// URL preconfigurada — no requiere configuración manual
+localStorage.setItem(LS.webhook, FIXED_WEBHOOK);
+WEBHOOK = FIXED_WEBHOOK;
+document.getElementById("configBanner").style.display = "none";
+document.getElementById("webhookBar").style.display = "none";
+updateDot();
 </script>
 </body>
 </html>
