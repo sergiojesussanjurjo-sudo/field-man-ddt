@@ -679,18 +679,30 @@ async function handleSubmit() {
   };
 
   try {
-    await fetch(WEBHOOK, {
+    const res = await fetch(WEBHOOK, {
       method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain" },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
-    // no-cors no devuelve status — si no lanzó excepción, el envío fue exitoso
-    showSuccess();
+    if (res.ok || res.status === 202) {
+      showSuccess();
+    } else {
+      throw new Error("HTTP " + res.status);
+    }
   } catch (e) {
-    showToast("Error al enviar: " + e.message, "err");
-    btn.disabled = false;
-    resetBtn();
+    try {
+      await fetch(WEBHOOK, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      showSuccess();
+    } catch (e2) {
+      showToast("Error al enviar: " + e2.message, "err");
+      btn.disabled = false;
+      resetBtn();
+    }
   }
 }
 
